@@ -36,8 +36,6 @@ namespace CPU_Sheduler_Take_2
             this.processIndexLabel = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.saveChangesBtn = new System.Windows.Forms.Button();
-            this.burstTimeBox = new System.Windows.Forms.NumericUpDown();
-            this.arrivalTimeBox = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.numberOfProcessesText = new System.Windows.Forms.TextBox();
@@ -47,11 +45,11 @@ namespace CPU_Sheduler_Take_2
             this.pr = new System.Windows.Forms.TabPage();
             this.rr = new System.Windows.Forms.TabPage();
             this.processContainer = new System.Windows.Forms.FlowLayoutPanel();
+            this.arrivalTimeBox = new System.Windows.Forms.TextBox();
+            this.burstTimeBox = new System.Windows.Forms.TextBox();
             this.mainTabs.SuspendLayout();
             this.fcfs.SuspendLayout();
             this.modifyProcessGroup.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.burstTimeBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arrivalTimeBox)).BeginInit();
             this.SuspendLayout();
             // 
             // mainTabs
@@ -82,12 +80,12 @@ namespace CPU_Sheduler_Take_2
             // 
             // modifyProcessGroup
             // 
+            this.modifyProcessGroup.Controls.Add(this.burstTimeBox);
+            this.modifyProcessGroup.Controls.Add(this.arrivalTimeBox);
             this.modifyProcessGroup.Controls.Add(this.deleteProcessBtn);
             this.modifyProcessGroup.Controls.Add(this.processIndexLabel);
             this.modifyProcessGroup.Controls.Add(this.label4);
             this.modifyProcessGroup.Controls.Add(this.saveChangesBtn);
-            this.modifyProcessGroup.Controls.Add(this.burstTimeBox);
-            this.modifyProcessGroup.Controls.Add(this.arrivalTimeBox);
             this.modifyProcessGroup.Controls.Add(this.label3);
             this.modifyProcessGroup.Controls.Add(this.label2);
             this.modifyProcessGroup.Location = new System.Drawing.Point(6, 154);
@@ -138,22 +136,6 @@ namespace CPU_Sheduler_Take_2
             this.saveChangesBtn.Text = "Save Changes";
             this.saveChangesBtn.UseVisualStyleBackColor = false;
             this.saveChangesBtn.Click += new System.EventHandler(this.saveChangesBtn_Click);
-            // 
-            // burstTimeBox
-            // 
-            this.burstTimeBox.Enabled = false;
-            this.burstTimeBox.Location = new System.Drawing.Point(134, 85);
-            this.burstTimeBox.Name = "burstTimeBox";
-            this.burstTimeBox.Size = new System.Drawing.Size(89, 20);
-            this.burstTimeBox.TabIndex = 3;
-            // 
-            // arrivalTimeBox
-            // 
-            this.arrivalTimeBox.Enabled = false;
-            this.arrivalTimeBox.Location = new System.Drawing.Point(134, 45);
-            this.arrivalTimeBox.Name = "arrivalTimeBox";
-            this.arrivalTimeBox.Size = new System.Drawing.Size(89, 20);
-            this.arrivalTimeBox.TabIndex = 2;
             // 
             // label3
             // 
@@ -241,6 +223,20 @@ namespace CPU_Sheduler_Take_2
             this.processContainer.TabIndex = 1;
             this.processContainer.WrapContents = false;
             // 
+            // arrivalTimeBox
+            // 
+            this.arrivalTimeBox.Location = new System.Drawing.Point(134, 44);
+            this.arrivalTimeBox.Name = "arrivalTimeBox";
+            this.arrivalTimeBox.Size = new System.Drawing.Size(64, 20);
+            this.arrivalTimeBox.TabIndex = 8;
+            // 
+            // burstTimeBox
+            // 
+            this.burstTimeBox.Location = new System.Drawing.Point(134, 84);
+            this.burstTimeBox.Name = "burstTimeBox";
+            this.burstTimeBox.Size = new System.Drawing.Size(64, 20);
+            this.burstTimeBox.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -255,8 +251,6 @@ namespace CPU_Sheduler_Take_2
             this.fcfs.PerformLayout();
             this.modifyProcessGroup.ResumeLayout(false);
             this.modifyProcessGroup.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.burstTimeBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arrivalTimeBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -273,14 +267,14 @@ namespace CPU_Sheduler_Take_2
         private System.Windows.Forms.TextBox numberOfProcessesText;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button addNewProcessBtn;
-        private System.Windows.Forms.NumericUpDown burstTimeBox;
-        private System.Windows.Forms.NumericUpDown arrivalTimeBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button saveChangesBtn;
         private System.Windows.Forms.Label processIndexLabel;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button deleteProcessBtn;
+        private System.Windows.Forms.TextBox burstTimeBox;
+        private System.Windows.Forms.TextBox arrivalTimeBox;
     }
 }
 

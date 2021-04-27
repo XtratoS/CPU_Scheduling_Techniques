@@ -23,7 +23,7 @@ namespace CPU_Sheduler_Take_2
         {
             System.Windows.Forms.Button newBtn = new System.Windows.Forms.Button();
             newBtn.Height = 70;
-            newBtn.Width = PROCESS_WIDTH_PIXELS * process.burst;
+            newBtn.Width = Convert.ToInt32(process.burst * PROCESS_WIDTH_PIXELS);
             newBtn.Margin = new System.Windows.Forms.Padding(0);
             newBtn.Text = process.name;
             newBtn.BackColor = Color.DarkOrange;
@@ -34,7 +34,7 @@ namespace CPU_Sheduler_Take_2
             
             if (newBtn.Location.X / PROCESS_WIDTH_PIXELS < process.arrival)
             {
-                newBtn.Margin = new Padding(process.arrival * PROCESS_WIDTH_PIXELS - newBtn.Location.X, 0, 0, 0);
+                newBtn.Margin = new Padding(Convert.ToInt32(process.arrival * PROCESS_WIDTH_PIXELS - newBtn.Location.X), 0, 0, 0);
             }
         }
 
@@ -51,8 +51,8 @@ namespace CPU_Sheduler_Take_2
             burstTimeBox.Enabled = true;
             processList.selectedProcessIndex = processList.processes.IndexOf(p);
             processIndexLabel.Text = processList.getSelectedProcess().index.ToString();
-            arrivalTimeBox.Value = p.arrival;
-            burstTimeBox.Value = p.burst;
+            arrivalTimeBox.Text = p.arrival.ToString();
+            burstTimeBox.Text = p.burst.ToString();
         }
 
         public void clearProcessContainer()
@@ -76,8 +76,8 @@ namespace CPU_Sheduler_Take_2
                 burstTimeBox.Enabled = true;
                 Process selectedProcess = processList.getSelectedProcess();
                 processIndexLabel.Text = selectedProcess.index.ToString();
-                arrivalTimeBox.Value = selectedProcess.arrival;
-                burstTimeBox.Value = selectedProcess.burst;
+                arrivalTimeBox.Text = selectedProcess.arrival.ToString();
+                burstTimeBox.Text = selectedProcess.burst.ToString();
             }
             numberOfProcessesText.Text = processList.processes.Count.ToString();
 
@@ -117,9 +117,14 @@ namespace CPU_Sheduler_Take_2
         private void saveChangesBtn_Click(object sender, EventArgs e)
         {
             Process selectedProcess = processList.getSelectedProcess();
-            selectedProcess.arrival = Convert.ToInt32(arrivalTimeBox.Value);
-            selectedProcess.burst = Convert.ToInt32(burstTimeBox.Value);
-            updateUI();
+            bool tA = Decimal.TryParse(arrivalTimeBox.Text, out selectedProcess.arrival);
+            bool tB = Decimal.TryParse(burstTimeBox.Text, out selectedProcess.burst);
+            if (tA && tB)
+            {
+                updateUI();
+            } else {
+                MessageBox.Show("Arrival and Burst Time must be decimal values", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void deleteProcessBtn_Click(object sender, EventArgs e)

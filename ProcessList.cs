@@ -61,7 +61,7 @@ class ProcessList
         foreach (Process process in this.processes)
         {
             process.start = currTime;
-            currTime += process.burst;
+            currTime += Convert.ToInt32(process.burst);
         }
 
         Process[] processArray = this.processes.ToArray();

@@ -8,11 +8,11 @@ public class Process
 {
     public int index;
     public string name;
-    public int arrival;
-    public int start;
-    public int burst;
+    public decimal arrival;
+    public decimal start;
+    public decimal burst;
 
-    public Process(int index, int arrival, int burst)
+    public Process(int index, decimal arrival, decimal burst)
     {
         this.index = index;
         this.name = "Process " + index.ToString();
