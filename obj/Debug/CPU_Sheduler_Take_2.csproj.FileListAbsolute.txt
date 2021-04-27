@@ -1,0 +1,10 @@
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\bin\Debug\CPU_Sheduler_Take_2.exe.config
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\bin\Debug\CPU_Sheduler_Take_2.exe
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\bin\Debug\CPU_Sheduler_Take_2.pdb
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\obj\Debug\CPU_Sheduler_Take_2.csprojAssemblyReference.cache
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\obj\Debug\CPU_Sheduler_Take_2.Form1.resources
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\obj\Debug\CPU_Sheduler_Take_2.Properties.Resources.resources
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\obj\Debug\CPU_Sheduler_Take_2.csproj.GenerateResource.cache
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\obj\Debug\CPU_Sheduler_Take_2.csproj.CoreCompileInputs.cache
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\obj\Debug\CPU_Sheduler_Take_2.exe
+C:\Users\XtratoS\source\repos\CPU_Sheduler_Take_2\obj\Debug\CPU_Sheduler_Take_2.pdb
