@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 class ProcessList
 {
@@ -34,6 +35,13 @@ class ProcessList
         return process;
     }
 
+    public Process Add(Process p)
+    {
+        Process x = new Process(this.processIndex++, p.arrival, p.burst);
+        this.processes.Add(x);
+        return x;
+    }
+
     public Process getAt(int index)
     {
         return index >= 0 ? this.processes[index] : null;
@@ -56,16 +64,46 @@ class ProcessList
     }
     public Process[] useFCFS()
     {
-        int currTime = 0;
+        decimal currTime = 0;
 
         foreach (Process process in this.processes)
         {
             process.start = currTime;
-            currTime += Convert.ToInt32(process.burst);
+            currTime += process.burst;
         }
 
         Process[] processArray = this.processes.ToArray();
 
+        Array.Sort(processArray, new ProcessComparer());
+
+        return processArray;
+    }
+
+    public Process[] useRR(decimal quantumTime)
+    {
+        List<Process> processList = this.processes.ConvertAll(p=>new Process(p));
+        decimal currTime = 0;
+        List<Process> currentProcesses = new List<Process>();
+        while (processList.Count > 0)
+        {
+            for (int i = 0; i < processList.Count; i++)
+            {
+                Process p = processList[i];
+                if (p.arrival <= currTime)
+                {
+                    decimal processBurstTime = p.remaining >= quantumTime ? quantumTime : p.remaining;
+                    processList[i].remaining -= processBurstTime;
+                    currentProcesses.Add(
+                        new Process(p.index, currTime, processBurstTime)
+                    );
+                    currTime += processBurstTime;
+                }
+            }
+            //foreach (Process p in processList){Console.WriteLine("{0} {1} {2}", p.index, p.name, p.remaining);}
+            processList = processList.FindAll(p => p.remaining > 0);
+        }
+
+        Process[] processArray = currentProcesses.ToArray();
         Array.Sort(processArray, new ProcessComparer());
 
         return processArray;

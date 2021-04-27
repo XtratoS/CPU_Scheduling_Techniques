@@ -38,7 +38,7 @@ namespace CPU_Sheduler_Take_2
             this.saveChangesBtn = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.numberOfProcessesText = new System.Windows.Forms.TextBox();
+            this.numberOfProcesses = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.addNewProcessBtn = new System.Windows.Forms.Button();
             this.sjf = new System.Windows.Forms.TabPage();
@@ -47,9 +47,13 @@ namespace CPU_Sheduler_Take_2
             this.processContainer = new System.Windows.Forms.FlowLayoutPanel();
             this.arrivalTimeBox = new System.Windows.Forms.TextBox();
             this.burstTimeBox = new System.Windows.Forms.TextBox();
+            this.quantumTimeBox = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.quantumTimeConfirmBtn = new System.Windows.Forms.Button();
             this.mainTabs.SuspendLayout();
             this.fcfs.SuspendLayout();
             this.modifyProcessGroup.SuspendLayout();
+            this.rr.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTabs
@@ -67,7 +71,7 @@ namespace CPU_Sheduler_Take_2
             // fcfs
             // 
             this.fcfs.Controls.Add(this.modifyProcessGroup);
-            this.fcfs.Controls.Add(this.numberOfProcessesText);
+            this.fcfs.Controls.Add(this.numberOfProcesses);
             this.fcfs.Controls.Add(this.label1);
             this.fcfs.Controls.Add(this.addNewProcessBtn);
             this.fcfs.Location = new System.Drawing.Point(4, 22);
@@ -99,7 +103,7 @@ namespace CPU_Sheduler_Take_2
             // 
             this.deleteProcessBtn.BackColor = System.Drawing.Color.IndianRed;
             this.deleteProcessBtn.Enabled = false;
-            this.deleteProcessBtn.Location = new System.Drawing.Point(447, 10);
+            this.deleteProcessBtn.Location = new System.Drawing.Point(566, 10);
             this.deleteProcessBtn.Name = "deleteProcessBtn";
             this.deleteProcessBtn.Size = new System.Drawing.Size(109, 119);
             this.deleteProcessBtn.TabIndex = 7;
@@ -129,9 +133,9 @@ namespace CPU_Sheduler_Take_2
             // 
             this.saveChangesBtn.BackColor = System.Drawing.Color.SpringGreen;
             this.saveChangesBtn.Enabled = false;
-            this.saveChangesBtn.Location = new System.Drawing.Point(562, 10);
+            this.saveChangesBtn.Location = new System.Drawing.Point(398, 10);
             this.saveChangesBtn.Name = "saveChangesBtn";
-            this.saveChangesBtn.Size = new System.Drawing.Size(190, 119);
+            this.saveChangesBtn.Size = new System.Drawing.Size(162, 119);
             this.saveChangesBtn.TabIndex = 4;
             this.saveChangesBtn.Text = "Save Changes";
             this.saveChangesBtn.UseVisualStyleBackColor = false;
@@ -155,14 +159,14 @@ namespace CPU_Sheduler_Take_2
             this.label2.TabIndex = 0;
             this.label2.Text = "Arrival Time";
             // 
-            // numberOfProcessesText
+            // numberOfProcesses
             // 
-            this.numberOfProcessesText.Enabled = false;
-            this.numberOfProcessesText.Location = new System.Drawing.Point(143, 18);
-            this.numberOfProcessesText.Name = "numberOfProcessesText";
-            this.numberOfProcessesText.Size = new System.Drawing.Size(39, 20);
-            this.numberOfProcessesText.TabIndex = 2;
-            this.numberOfProcessesText.Text = "0";
+            this.numberOfProcesses.Enabled = false;
+            this.numberOfProcesses.Location = new System.Drawing.Point(143, 18);
+            this.numberOfProcesses.Name = "numberOfProcesses";
+            this.numberOfProcesses.Size = new System.Drawing.Size(39, 20);
+            this.numberOfProcesses.TabIndex = 2;
+            this.numberOfProcesses.Text = "0";
             // 
             // label1
             // 
@@ -205,6 +209,9 @@ namespace CPU_Sheduler_Take_2
             // 
             // rr
             // 
+            this.rr.Controls.Add(this.quantumTimeConfirmBtn);
+            this.rr.Controls.Add(this.label5);
+            this.rr.Controls.Add(this.quantumTimeBox);
             this.rr.Location = new System.Drawing.Point(4, 22);
             this.rr.Name = "rr";
             this.rr.Size = new System.Drawing.Size(768, 295);
@@ -225,6 +232,7 @@ namespace CPU_Sheduler_Take_2
             // 
             // arrivalTimeBox
             // 
+            this.arrivalTimeBox.Enabled = false;
             this.arrivalTimeBox.Location = new System.Drawing.Point(134, 44);
             this.arrivalTimeBox.Name = "arrivalTimeBox";
             this.arrivalTimeBox.Size = new System.Drawing.Size(64, 20);
@@ -232,10 +240,41 @@ namespace CPU_Sheduler_Take_2
             // 
             // burstTimeBox
             // 
+            this.burstTimeBox.Enabled = false;
             this.burstTimeBox.Location = new System.Drawing.Point(134, 84);
             this.burstTimeBox.Name = "burstTimeBox";
             this.burstTimeBox.Size = new System.Drawing.Size(64, 20);
             this.burstTimeBox.TabIndex = 9;
+            // 
+            // quantumTimeBox
+            // 
+            this.quantumTimeBox.Location = new System.Drawing.Point(143, 60);
+            this.quantumTimeBox.Name = "quantumTimeBox";
+            this.quantumTimeBox.Size = new System.Drawing.Size(39, 20);
+            this.quantumTimeBox.TabIndex = 11;
+            this.quantumTimeBox.Text = "1";
+            this.quantumTimeBox.TextChanged += new System.EventHandler(this.quantumTimeBox_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 63);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(76, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Quantum Time";
+            // 
+            // quantumTimeConfirmBtn
+            // 
+            this.quantumTimeConfirmBtn.BackColor = System.Drawing.Color.SpringGreen;
+            this.quantumTimeConfirmBtn.Enabled = false;
+            this.quantumTimeConfirmBtn.Location = new System.Drawing.Point(212, 56);
+            this.quantumTimeConfirmBtn.Name = "quantumTimeConfirmBtn";
+            this.quantumTimeConfirmBtn.Size = new System.Drawing.Size(75, 27);
+            this.quantumTimeConfirmBtn.TabIndex = 13;
+            this.quantumTimeConfirmBtn.Text = "Confirm";
+            this.quantumTimeConfirmBtn.UseVisualStyleBackColor = false;
+            this.quantumTimeConfirmBtn.Click += new System.EventHandler(this.quantumTimeConfirmBtn_Click);
             // 
             // Form1
             // 
@@ -246,11 +285,14 @@ namespace CPU_Sheduler_Take_2
             this.Controls.Add(this.mainTabs);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.mainTabs.ResumeLayout(false);
             this.fcfs.ResumeLayout(false);
             this.fcfs.PerformLayout();
             this.modifyProcessGroup.ResumeLayout(false);
             this.modifyProcessGroup.PerformLayout();
+            this.rr.ResumeLayout(false);
+            this.rr.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -264,7 +306,7 @@ namespace CPU_Sheduler_Take_2
         private System.Windows.Forms.TabPage rr;
         private System.Windows.Forms.FlowLayoutPanel processContainer;
         private System.Windows.Forms.GroupBox modifyProcessGroup;
-        private System.Windows.Forms.TextBox numberOfProcessesText;
+        private System.Windows.Forms.TextBox numberOfProcesses;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button addNewProcessBtn;
         private System.Windows.Forms.Label label3;
@@ -275,6 +317,9 @@ namespace CPU_Sheduler_Take_2
         private System.Windows.Forms.Button deleteProcessBtn;
         private System.Windows.Forms.TextBox burstTimeBox;
         private System.Windows.Forms.TextBox arrivalTimeBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox quantumTimeBox;
+        private System.Windows.Forms.Button quantumTimeConfirmBtn;
     }
 }
 

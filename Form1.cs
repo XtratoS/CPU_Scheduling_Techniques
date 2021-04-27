@@ -49,10 +49,10 @@ namespace CPU_Sheduler_Take_2
             saveChangesBtn.Enabled = true;
             arrivalTimeBox.Enabled = true;
             burstTimeBox.Enabled = true;
-            processList.selectedProcessIndex = processList.processes.IndexOf(p);
+            processList.selectedProcessIndex = p.index;
             processIndexLabel.Text = processList.getSelectedProcess().index.ToString();
-            arrivalTimeBox.Text = p.arrival.ToString();
-            burstTimeBox.Text = p.burst.ToString();
+            arrivalTimeBox.Text = processList.getSelectedProcess().arrival.ToString();
+            burstTimeBox.Text = processList.getSelectedProcess().burst.ToString();
         }
 
         public void clearProcessContainer()
@@ -79,7 +79,7 @@ namespace CPU_Sheduler_Take_2
                 arrivalTimeBox.Text = selectedProcess.arrival.ToString();
                 burstTimeBox.Text = selectedProcess.burst.ToString();
             }
-            numberOfProcessesText.Text = processList.processes.Count.ToString();
+            numberOfProcesses.Text = processList.processes.Count.ToString();
 
             Process[] processArray;
             switch (mainTabs.SelectedTab.Name)
@@ -94,14 +94,14 @@ namespace CPU_Sheduler_Take_2
                     processArray = processList.useFCFS();
                     break;
                 case "rr":
-                    processArray = processList.useFCFS();
+                    processArray = processList.useRR(Decimal.Parse(quantumTimeBox.Text));
                     break;
                 default:
                     processArray = processList.useFCFS();
                     break;
             }
             clearProcessContainer();
-            foreach(Process p in processArray)
+            foreach (Process p in processArray)
             {
                 renderProcess(p);
             }
@@ -109,7 +109,7 @@ namespace CPU_Sheduler_Take_2
 
         private void addNewProcessBtn_Click(object sender, EventArgs e)
         {
-            Process addedProcess = processList.Add(0, 2);
+            Process addedProcess = processList.Add(new Process(0, 0, 2));
             processList.selectedProcessIndex = processList.processes.IndexOf(addedProcess);
             updateUI();
         }
@@ -119,12 +119,21 @@ namespace CPU_Sheduler_Take_2
             Process selectedProcess = processList.getSelectedProcess();
             bool tA = Decimal.TryParse(arrivalTimeBox.Text, out selectedProcess.arrival);
             bool tB = Decimal.TryParse(burstTimeBox.Text, out selectedProcess.burst);
-            if (tA && tB)
+            if (tA && tB && selectedProcess.arrival >= 0 && selectedProcess.burst > 0)
             {
                 updateUI();
             } else {
-                MessageBox.Show("Arrival and Burst Time must be decimal values", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Something went wrong, make sure that arrival time >= 0 and burst time > 0", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            processList.processes[
+                processList.processes.IndexOf(
+                    processList.getSelectedProcess()
+                )
+            ] = new Process(
+                selectedProcess.index,
+                selectedProcess.arrival,
+                selectedProcess.burst
+            );
         }
 
         private void deleteProcessBtn_Click(object sender, EventArgs e)
@@ -134,6 +143,37 @@ namespace CPU_Sheduler_Take_2
             {
                 processList.removeSelectedProcess();
                 updateUI();
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            mainTabs.MouseClick += (sender2, e2) =>
+            {
+                label1.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+                numberOfProcesses.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+                addNewProcessBtn.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+                modifyProcessGroup.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+                updateUI();
+            };
+        }
+
+        private void quantumTimeBox_TextChanged(object sender, EventArgs e)
+        {
+            quantumTimeConfirmBtn.Enabled = true;
+        }
+
+        private void quantumTimeConfirmBtn_Click(object sender, EventArgs e)
+        {
+            decimal quantumTime;
+            if (Decimal.TryParse(quantumTimeBox.Text, out quantumTime) == false || quantumTime <= 0)
+            {
+                MessageBox.Show("Quantum Time must be a positive decimal value", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                updateUI();
+                quantumTimeConfirmBtn.Enabled = false;
             }
         }
     }
