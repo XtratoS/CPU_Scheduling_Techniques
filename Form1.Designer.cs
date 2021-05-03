@@ -47,6 +47,9 @@ namespace CPU_Sheduler_Take_2
             this.label2 = new System.Windows.Forms.Label();
             this.addNewProcessBtn = new System.Windows.Forms.Button();
             this.sjf = new System.Windows.Forms.TabPage();
+            this.preemption = new System.Windows.Forms.GroupBox();
+            this.preemptive = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.pr = new System.Windows.Forms.TabPage();
             this.rr = new System.Windows.Forms.TabPage();
             this.RRModBox = new System.Windows.Forms.GroupBox();
@@ -54,17 +57,20 @@ namespace CPU_Sheduler_Take_2
             this.quantumTimeConfirmBtn = new System.Windows.Forms.Button();
             this.quantumTimeBox = new System.Windows.Forms.TextBox();
             this.processContainer = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.preemptive = new System.Windows.Forms.CheckBox();
+            this.priority = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.priorityBox = new System.Windows.Forms.NumericUpDown();
             this.mainTabs.SuspendLayout();
             this.fcfs.SuspendLayout();
             this.infoBox1.SuspendLayout();
             this.modifyProcessGroup.SuspendLayout();
             this.sjf.SuspendLayout();
+            this.preemption.SuspendLayout();
+            this.pr.SuspendLayout();
             this.rr.SuspendLayout();
             this.RRModBox.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.priority.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.priorityBox)).BeginInit();
             this.SuspendLayout();
             // 
             // mainTabs
@@ -159,7 +165,7 @@ namespace CPU_Sheduler_Take_2
             // burstTimeBox
             // 
             this.burstTimeBox.Enabled = false;
-            this.burstTimeBox.Location = new System.Drawing.Point(134, 84);
+            this.burstTimeBox.Location = new System.Drawing.Point(134, 70);
             this.burstTimeBox.Name = "burstTimeBox";
             this.burstTimeBox.Size = new System.Drawing.Size(64, 20);
             this.burstTimeBox.TabIndex = 9;
@@ -167,7 +173,7 @@ namespace CPU_Sheduler_Take_2
             // arrivalTimeBox
             // 
             this.arrivalTimeBox.Enabled = false;
-            this.arrivalTimeBox.Location = new System.Drawing.Point(134, 44);
+            this.arrivalTimeBox.Location = new System.Drawing.Point(134, 36);
             this.arrivalTimeBox.Name = "arrivalTimeBox";
             this.arrivalTimeBox.Size = new System.Drawing.Size(64, 20);
             this.arrivalTimeBox.TabIndex = 8;
@@ -217,7 +223,7 @@ namespace CPU_Sheduler_Take_2
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 87);
+            this.label3.Location = new System.Drawing.Point(10, 73);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(57, 13);
             this.label3.TabIndex = 1;
@@ -226,7 +232,7 @@ namespace CPU_Sheduler_Take_2
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 47);
+            this.label2.Location = new System.Drawing.Point(10, 39);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 13);
             this.label2.TabIndex = 0;
@@ -245,7 +251,7 @@ namespace CPU_Sheduler_Take_2
             // 
             // sjf
             // 
-            this.sjf.Controls.Add(this.groupBox1);
+            this.sjf.Controls.Add(this.preemption);
             this.sjf.Location = new System.Drawing.Point(4, 22);
             this.sjf.Name = "sjf";
             this.sjf.Padding = new System.Windows.Forms.Padding(3);
@@ -254,8 +260,39 @@ namespace CPU_Sheduler_Take_2
             this.sjf.Text = "Shortest Job First";
             this.sjf.UseVisualStyleBackColor = true;
             // 
+            // preemption
+            // 
+            this.preemption.Controls.Add(this.preemptive);
+            this.preemption.Controls.Add(this.label7);
+            this.preemption.Location = new System.Drawing.Point(6, 90);
+            this.preemption.Name = "preemption";
+            this.preemption.Size = new System.Drawing.Size(213, 41);
+            this.preemption.TabIndex = 18;
+            this.preemption.TabStop = false;
+            // 
+            // preemptive
+            // 
+            this.preemptive.AutoSize = true;
+            this.preemptive.Location = new System.Drawing.Point(127, 15);
+            this.preemptive.Name = "preemptive";
+            this.preemptive.Size = new System.Drawing.Size(79, 17);
+            this.preemptive.TabIndex = 19;
+            this.preemptive.Text = "Preemptive";
+            this.preemptive.UseVisualStyleBackColor = true;
+            this.preemptive.CheckedChanged += new System.EventHandler(this.preemptive_CheckedChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 16);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(60, 13);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "Preemptive";
+            // 
             // pr
             // 
+            this.pr.Controls.Add(this.priority);
             this.pr.Location = new System.Drawing.Point(4, 22);
             this.pr.Name = "pr";
             this.pr.Size = new System.Drawing.Size(768, 295);
@@ -325,35 +362,41 @@ namespace CPU_Sheduler_Take_2
             this.processContainer.TabIndex = 1;
             this.processContainer.WrapContents = false;
             // 
-            // groupBox1
+            // priority
             // 
-            this.groupBox1.Controls.Add(this.preemptive);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Location = new System.Drawing.Point(6, 90);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(213, 41);
-            this.groupBox1.TabIndex = 18;
-            this.groupBox1.TabStop = false;
+            this.priority.Controls.Add(this.label8);
+            this.priority.Controls.Add(this.priorityBox);
+            this.priority.Location = new System.Drawing.Point(6, 96);
+            this.priority.Name = "priority";
+            this.priority.Size = new System.Drawing.Size(200, 33);
+            this.priority.TabIndex = 20;
+            this.priority.TabStop = false;
             // 
-            // label7
+            // label8
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 16);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(60, 13);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Preemptive";
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 11);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(38, 13);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "Priority";
             // 
-            // preemptive
+            // priorityBox
             // 
-            this.preemptive.AutoSize = true;
-            this.preemptive.Location = new System.Drawing.Point(127, 15);
-            this.preemptive.Name = "preemptive";
-            this.preemptive.Size = new System.Drawing.Size(79, 17);
-            this.preemptive.TabIndex = 19;
-            this.preemptive.Text = "Preemptive";
-            this.preemptive.UseVisualStyleBackColor = true;
-            this.preemptive.CheckedChanged += new System.EventHandler(this.preemptive_CheckedChanged);
+            this.priorityBox.Location = new System.Drawing.Point(128, 9);
+            this.priorityBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.priorityBox.Name = "priorityBox";
+            this.priorityBox.Size = new System.Drawing.Size(56, 20);
+            this.priorityBox.TabIndex = 17;
+            this.priorityBox.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // Form1
             // 
@@ -372,11 +415,15 @@ namespace CPU_Sheduler_Take_2
             this.modifyProcessGroup.ResumeLayout(false);
             this.modifyProcessGroup.PerformLayout();
             this.sjf.ResumeLayout(false);
+            this.preemption.ResumeLayout(false);
+            this.preemption.PerformLayout();
+            this.pr.ResumeLayout(false);
             this.rr.ResumeLayout(false);
             this.RRModBox.ResumeLayout(false);
             this.RRModBox.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.priority.ResumeLayout(false);
+            this.priority.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.priorityBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -408,9 +455,12 @@ namespace CPU_Sheduler_Take_2
         private System.Windows.Forms.TextBox waitingTime;
         private System.Windows.Forms.GroupBox RRModBox;
         private System.Windows.Forms.Button deleteProcessBtn;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox preemption;
         private System.Windows.Forms.CheckBox preemptive;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.GroupBox priority;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown priorityBox;
     }
 }
 

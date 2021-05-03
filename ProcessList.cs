@@ -19,11 +19,21 @@ class ProcessList
         this.extraData["avg-waiting"] = 0;
         this.extraData["preemptive"] = 0;
         this.processes = new List<Process>();
-        this.processes.Add(new Process(0, 0, 5));
-        this.processes.Add(new Process(1, 1, 3));
-        this.processes.Add(new Process(2, 2, 1));
-        this.processes.Add(new Process(3, 3, 2));
-        this.processes.Add(new Process(4, 4, 3));
+        Process p0 = new Process(0, 0, 5);
+        p0.priority = 3;
+        this.processes.Add(p0);
+        Process p1 = new Process(1, 1, 3);
+        p1.priority = 2;
+        this.processes.Add(p1);
+        Process p2 = new Process(2, 2, 1);
+        p2.priority = 5;
+        this.processes.Add(p2);
+        Process p3 = new Process(3, 3, 2);
+        p3.priority = 1;
+        this.processes.Add(p3);
+        Process p4 = new Process(4, 4, 3);
+        p4.priority = 6;
+        this.processes.Add(p4);
         this.processIndex = 0;
     }
 
@@ -83,13 +93,103 @@ class ProcessList
             currTime += process.burst;
         }
 
-        this.extraData["avg-waiting"] = totalWaitingTime / this.processes.Count;
+        this.extraData["avg-waiting"] = totalWaitingTime / (this.processes.Count > 0 ? this.processes.Count : 1);
 
         Process[] processArray = this.processes.ToArray();
 
         Array.Sort(processArray, new ProcessComparer());
 
         return processArray;
+    }
+
+    public Process[] usePR()
+    {
+        if (this.extraData["preemptive"] == 0)
+        {
+            return this.useNonPreemptivePR();
+        }
+        else
+        {
+            return this.usePreemptivePR();
+        }
+    }
+
+    public Process[] useNonPreemptivePR()
+    {
+        List<Process> processList = this.processes.ConvertAll(p => new Process(p));
+        List<Process> currentProcesses;
+        List<Process> output = new List<Process>();
+        decimal currentTime = 0;
+        decimal averageWaitingTime = 0;
+        int counter = 0;
+
+        while (processList.Count() > 0)
+        {
+            currentProcesses = processList.FindAll(p => p.arrival <= currentTime);
+            currentProcesses.Sort((a, b) => {
+                int c1 = a.priority.CompareTo(b.priority);
+                return c1 != 0 ? c1 : a.index.CompareTo(b.index);
+            });
+            Process currentProcess = currentProcesses[0];
+
+            output.Add(new Process(currentProcess.index, currentTime, currentProcess.burst));
+            decimal processWaitingTime = currentTime - currentProcess.arrival;
+            averageWaitingTime = (averageWaitingTime * counter + processWaitingTime) / ++counter;
+
+            processList[processList.IndexOf(currentProcess)].remaining = 0;
+            currentTime += currentProcess.burst;
+
+            processList = processList.FindAll(p => p.remaining > 0);
+        }
+
+        this.extraData["avg-waiting"] = averageWaitingTime;
+        return output.ToArray();
+    }
+
+    public Process[] usePreemptivePR()
+    {
+        List<decimal> arrival_times = new List<decimal>();
+        foreach (Process p in this.processes)
+        {
+            arrival_times.Add(p.arrival);
+        }
+        arrival_times.Sort();
+        List<Process> processList = this.processes.ConvertAll(p => new Process(p));
+        List<Process> currentProcesses;
+        List<Process> outputP = new List<Process>();
+        decimal currentTime = 0;
+        int counter = 0;
+        decimal averageWaitingTime = 0;
+
+        while (processList.Count() > 0)
+        {
+            currentProcesses = processList.FindAll(p => p.arrival <= currentTime);
+            currentProcesses.Sort((a, b) => {
+                int c1 = a.priority.CompareTo(b.priority);
+                return c1 != 0 ? c1 : a.index.CompareTo(b.index);
+            });
+            Process currProcess = currentProcesses[0];
+            decimal nextArrivalTime = arrival_times.Find(t => t > currentTime);
+            decimal processEndTime = currProcess.remaining + currentTime;
+
+            decimal nextStoppageTime = nextArrivalTime > 0 && nextArrivalTime < processEndTime ? nextArrivalTime : processEndTime;
+            decimal roundTime = nextStoppageTime - currentTime;
+
+            outputP.Add(new Process(currProcess.index, currentTime, roundTime));
+            processList[processList.IndexOf(currProcess)].remaining -= roundTime;
+            currentTime = nextStoppageTime;
+
+            if (processList[processList.IndexOf(currProcess)].remaining <= 0)
+            {
+                decimal currentProcessWaitingTime = currentTime - currProcess.arrival - currProcess.burst;
+                averageWaitingTime = (averageWaitingTime * counter + currentProcessWaitingTime) / ++counter;
+            }
+
+            processList = processList.FindAll(p => p.remaining > 0);
+        }
+
+        this.extraData["avg-waiting"] = averageWaitingTime;
+        return outputP.ToArray();
     }
 
     public Process[] useSJF()
@@ -116,8 +216,10 @@ class ProcessList
         List<Process> currentProcesses;
         List<Process> outputP = new List<Process>();
         decimal currentTime = 0;
+        int counter = 0;
+        decimal averageWaitingTime = 0;
 
-        while(processList.Count() > 0)
+        while (processList.Count() > 0)
         {
             currentProcesses = processList.FindAll(p => p.arrival <= currentTime);
             currentProcesses.Sort((a, b) => {
@@ -135,9 +237,16 @@ class ProcessList
             processList[processList.IndexOf(currProcess)].remaining -= roundTime;
             currentTime = nextStoppageTime;
 
+            if (processList[processList.IndexOf(currProcess)].remaining <= 0)
+            {
+                decimal currentProcessWaitingTime = currentTime - currProcess.arrival - currProcess.burst;
+                averageWaitingTime = (averageWaitingTime * counter + currentProcessWaitingTime) / ++counter;
+            }
+
             processList = processList.FindAll(p => p.remaining > 0);
         }
 
+        this.extraData["avg-waiting"] = averageWaitingTime;
         return outputP.ToArray();
     }
 

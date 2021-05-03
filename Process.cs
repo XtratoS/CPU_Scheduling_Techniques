@@ -25,13 +25,13 @@ public class Process
         this.priority = 1;
     }
 
-    public Process(int index, decimal arrival, decimal burst, decimal remaining)
+    public Process(int index, decimal arrival, decimal burst, int priority)
     {
         this.index = index;
         this.name = "Process " + index.ToString();
         this.arrival = arrival;
         this.burst = burst;
-        this.remaining = remaining;
+        this.priority = priority;
     }
 
     public Process(Process another)

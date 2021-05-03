@@ -17,16 +17,6 @@ namespace CPU_Sheduler_Take_2
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
-
-            ProcessList processList = new ProcessList();
-            processList.Add(0, 3);
-            processList.Add(2, 4);
-            processList.Add(1, 5);
-            Process[] ps = processList.useFCFS();
-            foreach (Process p in ps)
-            {
-                Console.WriteLine(p);
-            }
         }
     }
 }

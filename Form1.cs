@@ -46,7 +46,6 @@ namespace CPU_Sheduler_Take_2
             System.Windows.Forms.Button b
         )
         {
-            deleteProcessBtn.Enabled = true;
             saveChangesBtn.Enabled = true;
             arrivalTimeBox.Enabled = true;
             burstTimeBox.Enabled = true;
@@ -54,6 +53,7 @@ namespace CPU_Sheduler_Take_2
             processIndexLabel.Text = processList.getSelectedProcess().index.ToString();
             arrivalTimeBox.Text = processList.getSelectedProcess().arrival.ToString();
             burstTimeBox.Text = processList.getSelectedProcess().burst.ToString();
+            priorityBox.Value = processList.getSelectedProcess().priority;
         }
 
         public void clearProcessContainer()
@@ -65,13 +65,11 @@ namespace CPU_Sheduler_Take_2
         {
             if (processList.processes.Count == 0)
             {
-                deleteProcessBtn.Enabled = false;
                 saveChangesBtn.Enabled = false;
                 arrivalTimeBox.Enabled = false;
                 burstTimeBox.Enabled = false;
             } else
             {
-                deleteProcessBtn.Enabled = true;
                 saveChangesBtn.Enabled = true;
                 arrivalTimeBox.Enabled = true;
                 burstTimeBox.Enabled = true;
@@ -92,7 +90,7 @@ namespace CPU_Sheduler_Take_2
                     processArray = processList.useSJF();
                     break;
                 case "pr":
-                    processArray = processList.useFCFS();
+                    processArray = processList.usePR();
                     break;
                 case "rr":
                     processArray = processList.useRR(Decimal.Parse(quantumTimeBox.Text));
@@ -121,6 +119,7 @@ namespace CPU_Sheduler_Take_2
             Process selectedProcess = processList.getSelectedProcess();
             bool tA = Decimal.TryParse(arrivalTimeBox.Text, out selectedProcess.arrival);
             bool tB = Decimal.TryParse(burstTimeBox.Text, out selectedProcess.burst);
+            selectedProcess.priority = Convert.ToInt32(priorityBox.Value);
             if (tA && tB && selectedProcess.arrival >= 0 && selectedProcess.burst > 0)
             {
                 updateUI();
@@ -150,13 +149,28 @@ namespace CPU_Sheduler_Take_2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            mainTabs.MouseClick += (sender2, e2) =>
+            mainTabs.MouseDown += navTabHandler;
+            //mainTabs.MouseUp += navTabHandler;
+            //mainTabs.MouseClick += navTabHandler;
+        }
+
+        private void navTabHandler(object sender2, MouseEventArgs e2)
+        {
+            infoBox1.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+            addNewProcessBtn.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+            modifyProcessGroup.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+            if (mainTabs.SelectedTab.Name == "sjf" || mainTabs.SelectedTab.Name == "pr")
             {
-                infoBox1.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
-                addNewProcessBtn.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
-                modifyProcessGroup.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
-                updateUI();
-            };
+                preemption.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+            }
+            if (mainTabs.SelectedTab.Name == "pr")
+            {
+                priority.Parent = modifyProcessGroup;
+            } else
+            {
+                priority.Parent = mainTabs.TabPages[2];
+            }
+            updateUI();
         }
 
         private void quantumTimeBox_TextChanged(object sender, EventArgs e)
