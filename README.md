@@ -23,3 +23,5 @@
 ![ganttChart](./captures/ganttChart.png)
 - Change the tab to switch to a different Scheduling Technique
 ![schedulingTechnique](./captures/schedulingTechnique.png)
+- The total number of processes and average waiting time are calculated and shown on the top left
+![schedulingParameters](./captures/schedulingParameters.png)
