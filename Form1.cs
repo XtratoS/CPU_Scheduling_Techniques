@@ -17,6 +17,7 @@ namespace CPU_Sheduler_Take_2
         public Form1()
         {
             InitializeComponent();
+            updateUI();
         }
 
         public void renderProcess(Process process)
@@ -88,7 +89,7 @@ namespace CPU_Sheduler_Take_2
                     processArray = processList.useFCFS();
                     break;
                 case "sjf":
-                    processArray = processList.useFCFS();
+                    processArray = processList.useSJF();
                     break;
                 case "pr":
                     processArray = processList.useFCFS();
@@ -105,6 +106,7 @@ namespace CPU_Sheduler_Take_2
             {
                 renderProcess(p);
             }
+            waitingTime.Text = Math.Round(processList.extraData["avg-waiting"], 2).ToString("G29");
         }
 
         private void addNewProcessBtn_Click(object sender, EventArgs e)
@@ -150,8 +152,7 @@ namespace CPU_Sheduler_Take_2
         {
             mainTabs.MouseClick += (sender2, e2) =>
             {
-                label1.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
-                numberOfProcesses.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
+                infoBox1.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
                 addNewProcessBtn.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
                 modifyProcessGroup.Parent = mainTabs.TabPages[mainTabs.SelectedIndex];
                 updateUI();
@@ -175,6 +176,12 @@ namespace CPU_Sheduler_Take_2
                 updateUI();
                 quantumTimeConfirmBtn.Enabled = false;
             }
+        }
+
+        private void preemptive_CheckedChanged(object sender, EventArgs e)
+        {
+            processList.extraData["preemptive"] = preemptive.Checked ? 1 : 0;
+            updateUI();
         }
     }
 }

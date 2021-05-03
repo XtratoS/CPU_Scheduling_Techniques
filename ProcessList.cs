@@ -11,10 +11,19 @@ class ProcessList
     public List<Process> processes;
     public int processIndex;
     public int selectedProcessIndex;
+    public IDictionary<string, decimal> extraData;
 
     public ProcessList()
     {
+        this.extraData = new Dictionary<string, decimal>();
+        this.extraData["avg-waiting"] = 0;
+        this.extraData["preemptive"] = 0;
         this.processes = new List<Process>();
+        this.processes.Add(new Process(0, 0, 5));
+        this.processes.Add(new Process(1, 1, 3));
+        this.processes.Add(new Process(2, 2, 1));
+        this.processes.Add(new Process(3, 3, 2));
+        this.processes.Add(new Process(4, 4, 3));
         this.processIndex = 0;
     }
 
@@ -65,12 +74,16 @@ class ProcessList
     public Process[] useFCFS()
     {
         decimal currTime = 0;
+        decimal totalWaitingTime = 0;
 
         foreach (Process process in this.processes)
         {
+            totalWaitingTime = currTime - process.arrival;
             process.start = currTime;
             currTime += process.burst;
         }
+
+        this.extraData["avg-waiting"] = totalWaitingTime / this.processes.Count;
 
         Process[] processArray = this.processes.ToArray();
 
@@ -79,34 +92,151 @@ class ProcessList
         return processArray;
     }
 
-    public Process[] useRR(decimal quantumTime)
+    public Process[] useSJF()
     {
-        List<Process> processList = this.processes.ConvertAll(p=>new Process(p));
-        decimal currTime = 0;
-        List<Process> currentProcesses = new List<Process>();
-        while (processList.Count > 0)
+        if (this.extraData["preemptive"] == 0)
         {
-            for (int i = 0; i < processList.Count; i++)
-            {
-                Process p = processList[i];
-                if (p.arrival <= currTime)
-                {
-                    decimal processBurstTime = p.remaining >= quantumTime ? quantumTime : p.remaining;
-                    processList[i].remaining -= processBurstTime;
-                    currentProcesses.Add(
-                        new Process(p.index, currTime, processBurstTime)
-                    );
-                    currTime += processBurstTime;
-                }
-            }
-            //foreach (Process p in processList){Console.WriteLine("{0} {1} {2}", p.index, p.name, p.remaining);}
+            return this.useNonPreemptiveSJF();
+        }
+        else
+        {
+            return this.usePreemptiveSJF();
+        }
+    }
+
+    public Process[] usePreemptiveSJF()
+    {
+        List<decimal> arrival_times = new List<decimal>();
+        foreach(Process p in this.processes)
+        {
+            arrival_times.Add(p.arrival);
+        }
+        arrival_times.Sort();
+        List<Process> processList = this.processes.ConvertAll(p => new Process(p));
+        List<Process> currentProcesses;
+        List<Process> outputP = new List<Process>();
+        decimal currentTime = 0;
+
+        while(processList.Count() > 0)
+        {
+            currentProcesses = processList.FindAll(p => p.arrival <= currentTime);
+            currentProcesses.Sort((a, b) => {
+                int c1 = a.remaining.CompareTo(b.remaining);
+                return c1 != 0 ? c1 : a.index.CompareTo(b.index);
+            });
+            Process currProcess = currentProcesses[0];
+            decimal nextArrivalTime = arrival_times.Find(t => t > currentTime);
+            decimal processEndTime = currProcess.remaining + currentTime;
+
+            decimal nextStoppageTime = nextArrivalTime > 0 && nextArrivalTime < processEndTime ? nextArrivalTime : processEndTime;
+            decimal roundTime = nextStoppageTime - currentTime;
+
+            outputP.Add(new Process(currProcess.index, currentTime, roundTime));
+            processList[processList.IndexOf(currProcess)].remaining -= roundTime;
+            currentTime = nextStoppageTime;
+
             processList = processList.FindAll(p => p.remaining > 0);
         }
 
-        Process[] processArray = currentProcesses.ToArray();
-        Array.Sort(processArray, new ProcessComparer());
+        return outputP.ToArray();
+    }
 
+    public Process[] useNonPreemptiveSJF()
+    {
+        List<Process> processList = this.processes.ConvertAll(p => new Process(p));
+        processList.Sort((a, b) => {
+            int c1 = a.arrival.CompareTo(b.arrival);
+            return c1 != 0 ? c1 : a.burst.CompareTo(b.burst);
+        });
+
+        List<Process> output = new List<Process>();
+        List<Process> current;
+        decimal currentTime = 0;
+        decimal averageWaitingTime = 0;
+        decimal currentProcessWaitingTime;
+        int counter = 0;
+        while (processList.Count() > 0)
+        {
+            current = processList.FindAll(p => p.arrival <= currentTime);
+            current.Sort((a, b) => {
+                return a.burst.CompareTo(b.burst);
+            });
+            currentProcessWaitingTime = currentTime - current[0].arrival;
+            averageWaitingTime = (averageWaitingTime * counter + currentProcessWaitingTime) / ++counter;
+            currentTime += current[0].burst;
+            output.Add(new Process(current[0]));
+            processList[processList.IndexOf(current[0])].remaining = 0;
+            processList = processList.FindAll(p => p.remaining > 0);
+        }
+
+        this.extraData["avg-waiting"] = averageWaitingTime;
+        return output.ToArray();
+    }
+
+    public Process[] useRR(decimal quantumTime)
+    {
+        List<Process> processList = this.processes.ConvertAll(p=>new Process(p));
+        processList.Sort((a, b) => {
+            int c1 = a.arrival.CompareTo(b.arrival);
+            return c1 != 0 ? c1 : a.index.CompareTo(b.index);
+        });
+
+        Queue<Process> processQueue = new Queue<Process>();
+        decimal currTime = 0;
+
+        Dictionary<int, decimal> finishTimes = new Dictionary<int, decimal>();
+
+        while (processList.Count > 0)
+        {
+            Process firstProcess = processList[0];
+            decimal roundTime = firstProcess.remaining > quantumTime ? quantumTime : firstProcess.remaining;
+
+            processQueue.Enqueue(new Process(firstProcess.index, currTime, roundTime));
+            processList[0].priority++;
+            processList[0].remaining -= roundTime;
+            if (processList[0].remaining <= 0)
+            {
+                finishTimes[processList[0].index] = currTime + roundTime;
+            }
+            processList[0].arrival = currTime + roundTime;
+            currTime += roundTime;
+
+            processList.Sort((a, b) => {
+                int c1 = a.arrival.CompareTo(b.arrival);
+                int c2 = a.priority.CompareTo(b.priority);
+                int c3 = a.index.CompareTo(b.index);
+                return c1 != 0 ? c1 : (c2 != 0 ? c2 : c3);
+            });
+
+            processList = processList.FindAll(p => p.remaining > 0);
+        }
+
+        Process[] processArray = processQueue.ToArray();
+
+        this.calculateRRParameters(finishTimes);
         return processArray;
+    }
+
+    public void calculateRRParameters(Dictionary<int, decimal> finishTimes)
+    {
+        foreach(int key in finishTimes.Keys)
+        {
+            for(int i=0; i<this.processes.Count; i++)
+            {
+                if (this.processes[i].index == key)
+                {
+                    this.processes[i].end = finishTimes[key];
+                }
+            }
+        }
+        decimal averageWaitingTime = 0;
+        int counter = 0;
+        foreach(Process p in this.processes)
+        {
+            decimal currW = p.end - p.arrival - p.burst;
+            averageWaitingTime = (averageWaitingTime * counter + currW) / ++counter;
+        }
+        this.extraData["avg-waiting"] = averageWaitingTime;
     }
 
     override public string ToString()

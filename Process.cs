@@ -12,6 +12,8 @@ public class Process
     public decimal start;
     public decimal burst;
     public decimal remaining;
+    public int priority;
+    public decimal end;
 
     public Process(int index, decimal arrival, decimal burst)
     {
@@ -20,6 +22,7 @@ public class Process
         this.arrival = arrival;
         this.burst = burst;
         this.remaining = burst;
+        this.priority = 1;
     }
 
     public Process(int index, decimal arrival, decimal burst, decimal remaining)
@@ -39,6 +42,8 @@ public class Process
         this.start = another.start;
         this.burst = another.burst;
         this.remaining = another.remaining;
+        this.priority = another.priority;
+        this.end = another.end;
     }
 
     override public string ToString()

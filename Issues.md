@@ -1,1 +1,2 @@
-- In Round-Robin, it's not accounted for gaps in the timeline, in-case the processor has finished all processes before recieving new ones.
+- ~~In Round-Robin, it's not accounted for gaps in the timeline, in-case the processor has finished all processes before recieving new ones~~.
+- In Preemtive SJF (Shortest Remaining Time First), Some processes may have a separated burst.
