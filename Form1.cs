@@ -126,15 +126,18 @@ namespace CPU_Sheduler_Take_2
             } else {
                 MessageBox.Show("Something went wrong, make sure that arrival time >= 0 and burst time > 0", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            processList.processes[
-                processList.processes.IndexOf(
-                    processList.getSelectedProcess()
-                )
-            ] = new Process(
+            Process newP = new Process(
                 selectedProcess.index,
                 selectedProcess.arrival,
                 selectedProcess.burst
             );
+            newP.priority = selectedProcess.priority;
+
+            processList.processes[
+                processList.processes.IndexOf(
+                    processList.getSelectedProcess()
+                )
+            ] = newP;
         }
 
         private void deleteProcessBtn_Click(object sender, EventArgs e)

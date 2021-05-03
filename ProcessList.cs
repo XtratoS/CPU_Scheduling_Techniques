@@ -19,22 +19,22 @@ class ProcessList
         this.extraData["avg-waiting"] = 0;
         this.extraData["preemptive"] = 0;
         this.processes = new List<Process>();
-        Process p0 = new Process(0, 0, 5);
-        p0.priority = 3;
+        /*Process p0 = new Process(0, 0, 9);
+        p0.priority = 2;
         this.processes.Add(p0);
-        Process p1 = new Process(1, 1, 3);
-        p1.priority = 2;
+        Process p1 = new Process(1, 1, 5);
+        p1.priority = 3;
         this.processes.Add(p1);
-        Process p2 = new Process(2, 2, 1);
-        p2.priority = 5;
+        Process p2 = new Process(2, 2, 3);
+        p2.priority = 1;
         this.processes.Add(p2);
-        Process p3 = new Process(3, 3, 2);
-        p3.priority = 1;
+        Process p3 = new Process(3, 3, 4);
+        p3.priority = 4;
         this.processes.Add(p3);
         Process p4 = new Process(4, 4, 3);
         p4.priority = 6;
         this.processes.Add(p4);
-        this.processIndex = 0;
+        this.processIndex = 0;*/
     }
 
     public void removeSelectedProcess()
